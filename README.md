@@ -1,15 +1,16 @@
 # zig-fsrs
 
-This is an implementation of [FSRS-4.5](https://github.com/open-spaced-repetition/fsrs4anki/wiki/The-Algorithm) in Zig.  
-This project is on zig 0.13.0
+This is an implementation of [FSRS-4.5](https://github.com/open-spaced-repetition/fsrs4anki/wiki/The-Algorithm) in Zig.
+
+This project is on zig 0.17.0
 
 ```zig
 const std = @import("std");
 const fsrs = @import("zig-fsrs");
-const Card = fsrs.Card;
+const Card = fsrs.models.Card;
 
 pub fn main() !void {
-    var f = fsrs.FSRS.init(.{});
+    var f: fsrs.FSRS = .init(.{});
     const initial_card = fsrs.Card.init();
     var now = std.time.timestamp();
 
@@ -52,7 +53,7 @@ const fsrs = @import("zig-fsrs");
 ### 1. Create a new FSRS instance
 
 ```zig
-var f = fsrs.FSRS.init(.{});
+var f = fsrs.Fsrs.init(.{});
 ```
 
 The parameters are optional. The parameters are:
@@ -66,13 +67,13 @@ The parameters are optional. The parameters are:
 ### 2. Create a new card
 
 ```zig
-const initial_card = fsrs.Card.init();
+const initial_card = fsrs.models.Card.init();
 ```
 
 ### 3. Schedule the card
 
 ```zig
-const review_time = std.time.timestamp();
+const review_time: std.Io.Timestamp = .now(io);
 var scheduled_cards = f.schedule(initial_card, review_time);
 ```
 
@@ -81,23 +82,23 @@ cards given the rating. To select a card, use the `select` method, which
 will return a `ReviewedCard` struct.
 
 ```zig
-const good = scheduled_cards.select(.Good);
+const good = scheduled_cards.select(.good);
 const new_card = good.card;
 ```
 
 ### Card fields
 
-| Field          | Type  | Description                                                                 |
-| -------------- | ----- | --------------------------------------------------------------------------- |
-| state          | State | The state of the card. Can be `New`, `Learning`, `Review`, or `Relearning`. |
-| reps           | i32   | The number of repetitions of the card.                                      |
-| lapses         | i32   | The number of times the card was remembered incorrectly.                    |
-| stability      | f32   | A measure of how well the card is remembered.                               |
-| difficulty     | f32   | The inherent difficulty of the card content.                                |
-| elapsed_days   | i64   | The number of elapsed days since the card was last reviewed.                |
-| scheduled_days | i64   | The next scheduled days for the card.                                       |
-| due            | i64   | The due date for the next review.                                           |
-| last_review    | i64   | The last review date of the card.                                           |
+| Field          | Type               | Description                                                                 |
+| -------------- | ------------------ | --------------------------------------------------------------------------- |
+| state          | State              | The state of the card. Can be `New`, `Learning`, `Review`, or `Relearning`. |
+| reps           | i32                | The number of repetitions of the card.                                      |
+| lapses         | i32                | The number of times the card was remembered incorrectly.                    |
+| stability      | f32                | A measure of how well the card is remembered.                               |
+| difficulty     | f32                | The inherent difficulty of the card content.                                |
+| elapsed_days   | i64                | The number of elapsed days since the card was last reviewed.                |
+| scheduled_days | i64                | The next scheduled days for the card.                                       |
+| due            | std.Io.Timestamp   | The due date for the next review.                                           |
+| last_review    | std.Io.Timestamp   | The last review date of the card.                                           |
 
 ## Examples
 

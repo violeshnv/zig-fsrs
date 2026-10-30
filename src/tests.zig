@@ -1,18 +1,18 @@
 const std = @import("std");
 const testing = @import("std").testing;
 const zig_fsrs = @import("zig-fsrs");
-const Rating = zig_fsrs.Rating;
-const State = zig_fsrs.State;
+const Rating = zig_fsrs.models.Rating;
+const State = zig_fsrs.models.State;
 
 test "test intervals" {
-    var fsrs = zig_fsrs.FSRS.init(.{
+    var fsrs: zig_fsrs.Fsrs = .init(.{
         .w = [17]f32{ 1.0171, 1.8296, 4.4145, 10.9355, 5.0965, 1.3322, 1.017, 0.0, 1.6243, 0.1369, 1.0321, 2.1866, 0.0661, 0.336, 1.7766, 0.1693, 2.9244 },
     });
-    var card = zig_fsrs.Card.init();
-    var now: i64 = 1669725000;
+    var card: zig_fsrs.models.Card = .init(testing.io);
+    var now: std.Io.Timestamp = .{ .nanoseconds = 1669725000 };
     var scheduled_cards = fsrs.schedule(card, now);
 
-    const ratings = [13]Rating{ .Good, .Good, .Good, .Good, .Good, .Good, .Again, .Again, .Good, .Good, .Good, .Good, .Good };
+    const ratings = [13]Rating{ .good, .good, .good, .good, .good, .good, .again, .again, .good, .good, .good, .good, .good };
     var intervals: [13]i64 = undefined;
 
     for (ratings, 0..) |rating, i| {
@@ -28,14 +28,14 @@ test "test intervals" {
 }
 
 test "test states" {
-    var fsrs = zig_fsrs.FSRS.init(.{
+    var fsrs: zig_fsrs.Fsrs = .init(.{
         .w = [17]f32{ 1.0171, 1.8296, 4.4145, 10.9355, 5.0965, 1.3322, 1.017, 0.0, 1.6243, 0.1369, 1.0321, 2.1866, 0.0661, 0.336, 1.7766, 0.1693, 2.9244 },
     });
-    var card = zig_fsrs.Card.init();
-    var now: i64 = 1669725000;
+    var card: zig_fsrs.models.Card = .init(testing.io);
+    var now: std.Io.Timestamp = .{ .nanoseconds = 1669725000 };
     var scheduled_cards = fsrs.schedule(card, now);
 
-    const ratings = [13]Rating{ .Good, .Good, .Good, .Good, .Good, .Good, .Again, .Again, .Good, .Good, .Good, .Good, .Good };
+    const ratings = [13]Rating{ .good, .good, .good, .good, .good, .good, .again, .again, .good, .good, .good, .good, .good };
     var states: [13]State = undefined;
 
     for (ratings, 0..) |rating, i| {
@@ -46,6 +46,6 @@ test "test states" {
         scheduled_cards = fsrs.schedule(card, now);
     }
 
-    const expected_states = [13]State{ .New, .Learning, .Review, .Review, .Review, .Review, .Review, .Relearning, .Relearning, .Review, .Review, .Review, .Review };
+    const expected_states = [13]State{ .new, .learning, .review, .review, .review, .review, .review, .relearning, .relearning, .review, .review, .review, .review };
     try testing.expectEqualSlices(State, &expected_states, &states);
 }

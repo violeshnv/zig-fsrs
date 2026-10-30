@@ -1,13 +1,12 @@
 .{
-    .name = "zig-fsrs",
+    .name = .zig_fsrs,
     .version = "0.0.1",
-    .minimum_zig_version = "0.13.0",
+    .minimum_zig_version = "0.17.0",
+    .fingerprint = 0x75d179db636197b9,
     .dependencies = .{
-        // this depency is only used in the examples
         .vaxis = .{
-            .url = "git+https://github.com/rockorager/libvaxis#dff7681c30c655b7b30a4af08abf6a7f98de975f",
-            .hash = "122060d57f28049b543c6c61b0d18ecde4e8b09eba886d5b08c71dc29ccebc2ff1a4",
-            .lazy = true,
+            .url = "git+https://github.com/rockorager/libvaxis.git#b24be454926b012316cb44d9f0e95da45d6bc3d9",
+            .hash = "vaxis-0.6.0-BWNV_E4QDQChkJdI41RehZ8CS67EJbCTy43904zntvcY",
         },
     },
     .paths = .{
